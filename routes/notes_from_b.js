@@ -1,7 +1,10 @@
 var express = require("express");
 var router = express.Router();
+const cors = require("cors");
 // .envを利用するためのdotenvライブラリ読み込み
 require("dotenv").config();
+
+router.use(cors());
 
 //mongoDB接続情報を設定
 const { MongoClient } = require("mongodb");
@@ -13,9 +16,8 @@ router.get("/", async (req, res) => {
   const database = client.db("notes");
   const notes = database.collection("notes");
 
-  //idが1のドキュメントを取得する
-  const query = { id: 1 };
-  const note = await notes.findOne(query);
+  //すべてのドキュメントを取得
+  const note = await notes.find({}).toArray();
 
   res.json(note);
 });
